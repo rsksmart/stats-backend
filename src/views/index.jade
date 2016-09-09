@@ -156,14 +156,14 @@ block content
             //- div.col-xs-12
             nodemap#mapHolder(data="map")
 
-    div.row
-      div.col-xs-12.stats-boxes
-        div.row.second-row
-          div.col-xs-12.stat-holder.box
-            div.active-nodes.text-warning
-              i.icon-warning-o
-              span.small-title ATTENTION!
-              span.small-value This page does not represent the entire state of the ethereum network - listing a node on this page is a voluntary process.
+    // div.row
+     // div.col-xs-12.stats-boxes
+       // div.row.second-row
+       //   div.col-xs-12.stat-holder.box
+          //  div.active-nodes.text-warning
+          //    i.icon-warning-o
+          //    span.small-title ATTENTION!
+          //    span.small-value This page does not represent the entire state of the ethereum network - listing a node on this page is a voluntary process.
           //- div.col-xs-12.stat-holder.box
           //-   div.active-nodes.text-danger
           //-     i.icon-hashrate
@@ -206,7 +206,7 @@ block content
             th.th-peerPropagationTime
               i.icon-gas(data-toggle="tooltip", data-placement="top", title="Propagation time", ng-click="orderTable(['-stats.block.number', 'stats.block.propagation'], false)")
             th.th-peerPropagationChart
-            th.th-peerPropagationAvg
+//            th.th-peerPropagationAvg
               i.icon-gas(data-toggle="tooltip", data-placement="top", title="Average propagation time", ng-click="orderTable(['stats.propagationAvg'], false)")
             th
               i.icon-bulb(data-toggle="tooltip", data-placement="top", title="Up-time", ng-click="orderTable(['-stats.uptime'], false)")
