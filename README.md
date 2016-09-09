@@ -48,3 +48,10 @@ npm start
 ```
 
 see the interface at http://localhost:3000
+
+
+To update geoip-lite db run
+
+``` bash
+npm explore geoip-lite -- npm run updatedb
+```
