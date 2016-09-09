@@ -1,10 +1,9 @@
 RSK Stats
 ============
-[![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url]
 
 This is a visual interface for tracking rsk status. It uses WebSockets to receive stats from running nodes and output them through an angular interface. It is the front-end implementation for [rsk-net-intelligence-api](https://github.com/rootstock/rsk-net-intelligence-api).
 
-![Screenshot](https://github.com/rootstock/rsk-netstats/blob/master/src/images/screenshot.jpg?raw=true "Screenshot")
+![Screenshot](https://github.com/rootstock/rsk-netstats/blob/master/src/images/screenshot.png?raw=true "Screenshot")
 
 ## Prerequisite
 * node
