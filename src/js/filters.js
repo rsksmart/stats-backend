@@ -658,13 +658,13 @@ function timeClass(timestamp)
 
 function blockTimeClass(diff)
 {
-	if(diff <= 25)
+	if(diff <= 35)
 		return 'text-success';
 
-	if(diff <= 40)
+	if(diff <= 50)
 		return 'text-warning';
 
-	if(diff <= 60)
+	if(diff <= 70)
 		return 'text-orange';
 
 	return 'text-danger'
