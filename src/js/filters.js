@@ -314,12 +314,23 @@ angular.module('netStatsApp.filters', [])
 
 		// var time = Math.floor((new Date()).getTime() / 1000);
 		var time = (new Date()).getTime();
-		var diff = Math.floor((time - timestamp)/1000);
+		var diff = Math.floor((time - timestamp - 10000)/1000);
 
-		if(diff < 60)
-			return Math.round(diff) + ' s ago';
+		var absVal = Math.abs(diff); 
 
-		return moment.duration(Math.round(diff), 's').humanize() + ' ago';
+		var result = '';
+		if(absVal < 60) {
+			result += Math.round(absVal) + ' s ';
+		} else {
+			result += moment.duration(Math.round(absVal), 's').humanize() + ' ';
+		}
+
+		if(diff > 0) {
+			result += ' Ago';
+		} else {
+			result += ' ITF';
+		}
+		return result; 
 	};
 })
 .filter('networkHashrateFilter', ['$sce', '$filter', function($sce, filter) {
