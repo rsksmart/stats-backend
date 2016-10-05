@@ -314,7 +314,7 @@ angular.module('netStatsApp.filters', [])
 
 		// var time = Math.floor((new Date()).getTime() / 1000);
 		var time = (new Date()).getTime();
-		var diff = Math.floor((time - timestamp - 10000)/1000);
+		var diff = Math.floor((time - timestamp)/1000);
 
 		var absVal = Math.abs(diff); 
 
