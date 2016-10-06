@@ -325,7 +325,7 @@ angular.module('netStatsApp.filters', [])
 			result += moment.duration(Math.round(absVal), 's').humanize() + ' ';
 		}
 
-		if(diff > 0) {
+		if(diff >= 0) {
 			result += ' Ago';
 		} else {
 			result += ' ITF';

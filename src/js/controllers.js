@@ -5,7 +5,7 @@ netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localSt
 
 	var MAX_BINS = 40;
 
-    $timeout(reloadScreen, 60000);
+    //$timeout(reloadScreen, 60000);
 
 	// Main Stats init
 	// ---------------
