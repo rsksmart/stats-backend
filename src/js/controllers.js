@@ -1,9 +1,11 @@
 
 /* Controllers */
 
-netStatsApp.controller('StatsCtrl', function($scope, $filter, $localStorage, socket, _, toastr) {
+netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localStorage, socket, _, toastr) {
 
 	var MAX_BINS = 40;
+
+    $timeout(reloadScreen, 60000);
 
 	// Main Stats init
 	// ---------------
@@ -650,5 +652,9 @@ netStatsApp.controller('StatsCtrl', function($scope, $filter, $localStorage, soc
 			return obj.replace(/\< *\/* *script *>*/gi,'').replace(/javascript/gi,'');
 		} else
 			return obj;
+	}
+
+	function reloadScreen() {
+	    location.reload();
 	}
 });
