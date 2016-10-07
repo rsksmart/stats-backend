@@ -330,13 +330,8 @@ angular.module('netStatsApp.filters', [])
 			result += moment.duration(Math.round(absVal), 's').humanize() + ' ';
 		}
 
-<<<<<<< HEAD
-		if(diff > 0) {
-			result += ' ago';
-=======
 		if(diff >= 0) {
-			result += ' Ago';
->>>>>>> e5c863f449c3708fd068fc19b9b717e7f591b3e9
+			result += ' ago';
 		} else {
 			result = '0 s';
 			// result += ' ITF';
