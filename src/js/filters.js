@@ -326,7 +326,7 @@ angular.module('netStatsApp.filters', [])
 		}
 
 		if(diff > 0) {
-			result += ' Ago';
+			result += ' ago';
 		} else {
 			result += ' ITF';
 		}
