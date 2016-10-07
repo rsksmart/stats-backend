@@ -309,13 +309,18 @@ angular.module('netStatsApp.filters', [])
 })
 .filter('blockTimeFilter', function() {
 	return function(timestamp) {
+		
 		if(timestamp === 0)
 			return '∞';
 
 		// var time = Math.floor((new Date()).getTime() / 1000);
+		
+		// Ruben - testing new time difference calcuation not based on client time
 		var time = (new Date()).getTime();
-		var diff = Math.floor((time - timestamp)/1000);
+		//var diff = Math.floor((time - timestamp)/1000);
 
+		var diff = Math.floor((time - timestamp + this.timeDifference)/1000);
+		
 		var absVal = Math.abs(diff); 
 
 		var result = '';
@@ -328,8 +333,10 @@ angular.module('netStatsApp.filters', [])
 		if(diff >= 0) {
 			result += ' Ago';
 		} else {
-			result += ' ITF';
+			result = '0 s';
+			// result += ' ITF';
 		}
+		
 		return result; 
 	};
 })

@@ -403,8 +403,14 @@ netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localSt
 				break;
 
 			case "client-ping":
+			
+				var serverTime = data.serverTime;
+				
+				$scope.serverTime = serverTime;
+				$scope.timeDifference = serverTime - _.now();
+				
 				socket.emit('client-pong', {
-					serverTime: data.serverTime,
+					serverTime: serverTime,
 					clientTime: _.now()
 				});
 
