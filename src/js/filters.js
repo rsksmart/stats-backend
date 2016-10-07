@@ -318,8 +318,8 @@ angular.module('netStatsApp.filters', [])
 		// Ruben - testing new time difference calcuation not based on client time
 		var time = (new Date()).getTime();
 		//var diff = Math.floor((time - timestamp)/1000);
-
-		var diff = Math.floor((time - timestamp + this.timeDifference)/1000);
+		
+		var diff = Math.floor((time - timestamp - this.timeDifference)/1000);
 		
 		var absVal = Math.abs(diff); 
 

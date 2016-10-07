@@ -124,7 +124,7 @@ netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localSt
 	});
 
 	socket.on('init', function(data)
-	{
+	{		
 		$scope.$apply(socketAction("init", data.nodes));
 	});
 
@@ -405,11 +405,18 @@ netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localSt
 			case "client-ping":
 			
 				var serverTime = data.serverTime;
+
+				console.log("===========================================");
+				console.log("client time: " + new Date());
+				console.log("server time: " + new Date(serverTime));
+				console.log("===========================================");
+
 				
 				$scope.serverTime = serverTime;
 				$scope.timeDifference = serverTime - _.now();
 				if ($scope.timeDifference < 3000) 
 					$scope.timeDifference = 0;
+				
 				
 				socket.emit('client-pong', {
 					serverTime: serverTime,
