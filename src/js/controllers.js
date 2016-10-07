@@ -5,7 +5,7 @@ netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localSt
 
 	var MAX_BINS = 40;
 
-    $timeout(reloadScreen, 60000);
+    //$timeout(reloadScreen, 60000);
 
 	// Main Stats init
 	// ---------------
@@ -403,8 +403,16 @@ netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localSt
 				break;
 
 			case "client-ping":
+			
+				var serverTime = data.serverTime;
+				
+				$scope.serverTime = serverTime;
+				$scope.timeDifference = serverTime - _.now();
+				if ($scope.timeDifference < 3000) 
+					$scope.timeDifference = 0;
+				
 				socket.emit('client-pong', {
-					serverTime: data.serverTime,
+					serverTime: serverTime,
 					clientTime: _.now()
 				});
 
