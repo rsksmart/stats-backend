@@ -319,7 +319,15 @@ angular.module('netStatsApp.filters', [])
 		var time = (new Date()).getTime();
 		//var diff = Math.floor((time - timestamp)/1000);
 		
-		var diff = Math.floor((time - timestamp - this.timeDifference)/1000);
+		var diff = Math.floor((time + this.timeDifference - timestamp )/1000);
+		
+		
+		console.log("===========================================");
+		console.log("client time: " + new Date(time));
+		console.log("adjusted time time: " + new Date(time + this.timeDifference));
+		console.log("last block: " + new Date(timesstamp));
+		console.log("===========================================");
+				
 		
 		var absVal = Math.abs(diff); 
 

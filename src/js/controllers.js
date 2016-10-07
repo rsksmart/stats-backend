@@ -405,12 +405,12 @@ netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localSt
 			case "client-ping":
 			
 				var serverTime = data.serverTime;
-
+				/*
 				console.log("===========================================");
 				console.log("client time: " + new Date());
 				console.log("server time: " + new Date(serverTime));
 				console.log("===========================================");
-
+				*/
 				
 				$scope.serverTime = serverTime;
 				$scope.timeDifference = serverTime - _.now();
