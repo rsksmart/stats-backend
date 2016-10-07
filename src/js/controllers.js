@@ -408,6 +408,8 @@ netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localSt
 				
 				$scope.serverTime = serverTime;
 				$scope.timeDifference = serverTime - _.now();
+				if ($scope.timeDifference < 3000) 
+					$scope.timeDifference = 0;
 				
 				socket.emit('client-pong', {
 					serverTime: serverTime,
