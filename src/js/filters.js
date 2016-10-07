@@ -325,7 +325,7 @@ angular.module('netStatsApp.filters', [])
 		console.log("===========================================");
 		console.log("client time: " + new Date(time));
 		console.log("adjusted time time: " + new Date(time + this.timeDifference));
-		console.log("last block: " + new Date(timesstamp));
+		console.log("last block: " + new Date(timestamp));
 		console.log("===========================================");
 				
 		
