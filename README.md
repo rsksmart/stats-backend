@@ -1,7 +1,7 @@
 RSK Network Stats
 ==================
 
-This is a visual interface for tracking rsk status. It uses WebSockets to receive stats from running nodes and output them through an angular interface. It is the front-end implementation for [network-intelligence-api](https://github.com/rootstock/network-intelligence-api).
+This is a visual interface for tracking rsk status. It uses WebSockets to receive stats from running nodes and output them through an angular interface. It is the front-end implementation for [network-intelligence-api](https://github.com/cubedro/eth-net-intelligence-api).
 
 ![Screenshot](https://github.com/rootstock/stats/blob/master/src/images/screenshot.png?raw=true "Screenshot")
 
