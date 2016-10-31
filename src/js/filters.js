@@ -309,17 +309,43 @@ angular.module('netStatsApp.filters', [])
 })
 .filter('blockTimeFilter', function() {
 	return function(timestamp) {
+		
 		if(timestamp === 0)
 			return '∞';
 
 		// var time = Math.floor((new Date()).getTime() / 1000);
+		
+		// Ruben - testing new time difference calcuation not based on client time
 		var time = (new Date()).getTime();
-		var diff = Math.floor((time - timestamp)/1000);
+		//var diff = Math.floor((time - timestamp)/1000);
+		
+		var diff = Math.floor((time + this.timeDifference - timestamp )/1000);
+		
+		
+		console.log("===========================================");
+		console.log("client time: " + new Date(time));
+		console.log("adjusted time time: " + new Date(time + this.timeDifference));
+		console.log("last block: " + new Date(timestamp));
+		console.log("===========================================");
+				
+		
+		var absVal = Math.abs(diff); 
 
-		if(diff < 60)
-			return Math.round(diff) + ' s ago';
+		var result = '';
+		if(absVal < 60) {
+			result += Math.round(absVal) + ' s ';
+		} else {
+			result += moment.duration(Math.round(absVal), 's').humanize() + ' ';
+		}
 
-		return moment.duration(Math.round(diff), 's').humanize() + ' ago';
+		if(diff >= 0) {
+			result += ' ago';
+		} else {
+			result = '0 s';
+			// result += ' ITF';
+		}
+		
+		return result; 
 	};
 })
 .filter('networkHashrateFilter', ['$sce', '$filter', function($sce, filter) {
@@ -658,13 +684,13 @@ function timeClass(timestamp)
 
 function blockTimeClass(diff)
 {
-	if(diff <= 13)
+	if(diff <= 35)
 		return 'text-success';
 
-	if(diff <= 20)
+	if(diff <= 50)
 		return 'text-warning';
 
-	if(diff <= 30)
+	if(diff <= 70)
 		return 'text-orange';
 
 	return 'text-danger'

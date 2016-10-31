@@ -1,10 +1,9 @@
-Ethereum Network Stats
-============
-[![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url]
+RSK Network Stats
+==================
 
-This is a visual interface for tracking ethereum network status. It uses WebSockets to receive stats from running nodes and output them through an angular interface. It is the front-end implementation for [eth-net-intelligence-api](https://github.com/cubedro/eth-net-intelligence-api).
+This is a visual interface for tracking rsk status. It uses WebSockets to receive stats from running nodes and output them through an angular interface. It is the front-end implementation for [network-intelligence-api](https://github.com/rootstock/network-intelligence-api).
 
-![Screenshot](https://raw.githubusercontent.com/cubedro/eth-netstats/master/src/images/screenshot.jpg?v=0.0.6 "Screenshot")
+![Screenshot](https://github.com/rootstock/stats/blob/master/src/images/screenshot.png?raw=true "Screenshot")
 
 ## Prerequisite
 * node
@@ -16,8 +15,8 @@ Make sure you have node.js and npm installed.
 Clone the repository and install the dependencies
 
 ```bash
-git clone https://github.com/cubedro/eth-netstats
-cd eth-netstats
+git clone https://github.com/rootstock/stats.git
+cd stats
 npm install
 sudo npm install -g grunt-cli
 ```
@@ -49,7 +48,9 @@ npm start
 
 see the interface at http://localhost:3000
 
-[travis-image]: https://travis-ci.org/cubedro/eth-netstats.svg
-[travis-url]: https://travis-ci.org/cubedro/eth-netstats
-[dep-image]: https://david-dm.org/cubedro/eth-netstats.svg
-[dep-url]: https://david-dm.org/cubedro/eth-netstats
+
+To update geoip-lite db run
+
+``` bash
+npm explore geoip-lite -- npm run updatedb
+```

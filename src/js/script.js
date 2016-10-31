@@ -13,10 +13,10 @@
 	$.fn.sparkline.defaults.bar.tooltipFormat = $.spformat('<div class="tooltip-arrow"></div><div class="tooltip-inner">{{prefix}}{{value}} {{suffix}}</div>');
 	$.fn.sparkline.defaults.bar.colorMap = $.range_map({
 		'0:6': '#10a0de',
-		'6:15': '#7bcc3a',
-		'15:40': '#FFD162',
-		'40:60': '#ff8a00',
-		'60:': '#F74B4B'
+		'6:35': '#7bcc3a',
+		'35:50': '#FFD162',
+		'50:70': '#ff8a00',
+		'70:': '#F74B4B'
 	});
 
 	moment.relativeTimeThreshold('s', 60);
@@ -30,8 +30,7 @@
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-// ga('create', 'UA-68390837-2', 'auto');
-ga('create', 'UA-80834434-1', 'auto');
+ga('create', 'UA-85399009-1', 'auto');
 ga('send', 'pageview');

@@ -1,9 +1,11 @@
 
 /* Controllers */
 
-netStatsApp.controller('StatsCtrl', function($scope, $filter, $localStorage, socket, _, toastr) {
+netStatsApp.controller('StatsCtrl', function($scope, $timeout, $filter, $localStorage, socket, _, toastr) {
 
 	var MAX_BINS = 40;
+
+    //$timeout(reloadScreen, 60000);
 
 	// Main Stats init
 	// ---------------
@@ -122,7 +124,7 @@ netStatsApp.controller('StatsCtrl', function($scope, $filter, $localStorage, soc
 	});
 
 	socket.on('init', function(data)
-	{
+	{		
 		$scope.$apply(socketAction("init", data.nodes));
 	});
 
@@ -401,8 +403,23 @@ netStatsApp.controller('StatsCtrl', function($scope, $filter, $localStorage, soc
 				break;
 
 			case "client-ping":
+			
+				var serverTime = data.serverTime;
+				/*
+				console.log("===========================================");
+				console.log("client time: " + new Date());
+				console.log("server time: " + new Date(serverTime));
+				console.log("===========================================");
+				*/
+				
+				$scope.serverTime = serverTime;
+				$scope.timeDifference = serverTime - _.now();
+				if ($scope.timeDifference < 3000) 
+					$scope.timeDifference = 0;
+				
+				
 				socket.emit('client-pong', {
-					serverTime: data.serverTime,
+					serverTime: serverTime,
 					clientTime: _.now()
 				});
 
@@ -650,5 +667,9 @@ netStatsApp.controller('StatsCtrl', function($scope, $filter, $localStorage, soc
 			return obj.replace(/\< *\/* *script *>*/gi,'').replace(/javascript/gi,'');
 		} else
 			return obj;
+	}
+
+	function reloadScreen() {
+	    location.reload();
 	}
 });

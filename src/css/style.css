@@ -242,6 +242,12 @@ span.small-title span.small {
 .second-row .box .small-value {
 	float: right;
 }
+
+.second-row .box .based-on {
+	float: right;
+	font-size: small;
+	color: grey;
+}
 .big-info .small-value {
 	position: absolute;
 	right: 14px;

@@ -150,29 +150,9 @@ block content
                   //- span.small-value {{ lastDifficulty | number }}
                   sparkchart.big-details.spark-difficulty(data="{{lastGasLimit.join(',')}}")
 
-
-
           div.col-xs-4.stat-holder.map-holder
             //- div.col-xs-12
             nodemap#mapHolder(data="map")
-
-    div.row
-      div.col-xs-12.stats-boxes
-        div.row.second-row
-          div.col-xs-12.stat-holder.box
-            div.active-nodes.text-warning
-              i.icon-warning-o
-              span.small-title ATTENTION!
-              span.small-value This page does not represent the entire state of the ethereum network - listing a node on this page is a voluntary process.
-          //- div.col-xs-12.stat-holder.box
-          //-   div.active-nodes.text-danger
-          //-     i.icon-hashrate
-          //-     span.small-title SECURITY ALERT
-          //-     span.small-value
-          //-       a(href="https://blog.ethereum.org/2015/09/10/security-alert-previous-security-patch-can-lead-to-invalid-state-root-on-go-clients-with-a-specific-transaction-sequence-fixed-please-update/", target="_blank", class="text-danger") Read the blog post
-
-
-      //- div.clearfix
 
     div.row(ng-cloak, style="padding-top: 10px")
       table.table.table-striped
@@ -186,8 +166,6 @@ block content
               i.icon-laptop(data-toggle="tooltip", data-placement="top", title="Node type", ng-click="orderTable(['info.node'], false)")
             th.th-latency
               i.icon-clock(data-toggle="tooltip", data-placement="top", title="Node latency", ng-click="orderTable(['stats.latency'], false)")
-            th
-              i.icon-mining(data-toggle="tooltip", data-placement="top", title="Is mining", ng-click="orderTable(['-stats.hashrate'], false)")
             th
               i.icon-group(data-toggle="tooltip", data-placement="top", title="Peers", ng-click="orderTable(['-stats.peers'], false)")
             th
@@ -223,7 +201,7 @@ block content
               div.small(ng-bind-html="node.info.node | nodeVersion")
             td(class="{{ node.readable.latencyClass }}")
               span.small {{ node.readable.latency }}
-            td(class="{{ node.stats.mining | hashrateClass : node.stats.active }}", ng-bind-html="node.stats.hashrate | hashrateFilter : node.stats.mining")
+            //td(class="{{ node.stats.mining | hashrateClass : node.stats.active }}", ng-bind-html="node.stats.hashrate | hashrateFilter : node.stats.mining")
             td(class="{{ node.stats.peers | peerClass : node.stats.active }}", style="padding-left: 11px;") {{node.stats.peers}}
             td(style="padding-left: 15px;") {{node.stats.pending}}
             td(class="{{ node.stats | blockClass : bestBlock }}")
@@ -244,3 +222,9 @@ block content
               nodepropagchart(data="{{node.history.join(',')}}")
             td(class="{{ node.stats | propagationNodeAvgTimeClass : bestBlock }}") {{ node.stats | blockPropagationAvgFilter : bestBlock }}
             td(class="{{ node.stats.uptime | upTimeClass : node.stats.active }}") {{ node.stats.uptime | upTimeFilter }}
+
+    div.row
+      div.col-xs-12.stats-boxes
+        div.row.second-row
+          div.col-xs-12.stat-holder.box
+            span.based-on Based on <a href="https://github.com/cubedro/eth-netstats">Ethereum Netstats</a>
