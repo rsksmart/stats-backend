@@ -69,23 +69,45 @@ Gas limit per block in history.
 
 ### Best Block
 
+The number of the best mined block added to the main chain.
+
 ### Uncles
+
+Number of uncles in current block vs count of uncles in last 50 blocks.
 
 ### Last Block
 
+Time elapsed from last mined block.
+
 ### Average Block Time
+
+Sum of block times divided by number of blocks in history.
 
 ### Average Network Hashrate
 
+Difficulty of best block divided by average of block time (time since previous block)
+
 ### Difficulty
+
+Last block difficulty.
 
 ### Active Nodes
 
+Number of active nodes vs number of total nodes.
+
 ### Gas Price
+
+Gas price in node with best block.
 
 ### Gas Limit
 
+Gas limit in best block.
+
 ### Page Latency
 
+Latency obtaining data.
+
 ### Uptime
+
+Percentage of nodes uptime.
 
