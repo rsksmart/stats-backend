@@ -123,6 +123,26 @@ angular.module('netStatsApp.filters', [])
 			unit = 'T';
 		}
 
+		if(hashes >= Math.pow(1000, 5) && hashes < Math.pow(1000, 6)) {
+			result = hashes / Math.pow(1000, 5);
+			unit = 'P';
+		}
+
+		if(hashes >= Math.pow(1000, 6) && hashes < Math.pow(1000, 7)) {
+			result = hashes / Math.pow(1000, 6);
+			unit = 'E';
+		}
+
+		if(hashes >= Math.pow(1000, 7) && hashes < Math.pow(1000, 8)) {
+			result = hashes / Math.pow(1000, 7);
+			unit = 'Z';
+		}
+
+		if(hashes >= Math.pow(1000, 8) && hashes < Math.pow(1000, 9)) {
+			result = hashes / Math.pow(1000, 8);
+			unit = 'Y';
+		}
+
 		return result.toFixed(2) + ' ' + unit + 'H';
 	};
 })
