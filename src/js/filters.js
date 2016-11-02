@@ -90,6 +90,22 @@ angular.module('netStatsApp.filters', [])
 			unit = 'T';
 		}
 
+
+		if(hashes >= Math.pow(1000, 5) && hashes < Math.pow(1000, 6)) {
+			result = hashes / Math.pow(1000, 5);
+			unit = 'P';
+		}
+
+		if(hashes >= Math.pow(1000, 6) && hashes < Math.pow(1000, 7)) {
+			result = hashes / Math.pow(1000, 6);
+			unit = 'E';
+		}
+
+		if(hashes >= Math.pow(1000, 7) && hashes < Math.pow(1000, 8)) {
+			result = hashes / Math.pow(1000, 7);
+			unit = 'Z';
+		}
+
 		return $sce.trustAsHtml('<span class="small">' + filter('number')(result.toFixed(1)) + ' <span class="small-hash">' + unit + 'H/s</span></span>');
 	};
 }])
