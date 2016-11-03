@@ -90,7 +90,6 @@ angular.module('netStatsApp.filters', [])
 			unit = 'T';
 		}
 
-
 		if(hashes >= Math.pow(1000, 5) && hashes < Math.pow(1000, 6)) {
 			result = hashes / Math.pow(1000, 5);
 			unit = 'P';
@@ -106,7 +105,12 @@ angular.module('netStatsApp.filters', [])
 			unit = 'Z';
 		}
 
-		return $sce.trustAsHtml('<span class="small">' + filter('number')(result.toFixed(1)) + ' <span class="small-hash">' + unit + 'H/s</span></span>');
+		if(hashes >= Math.pow(1000, 8) && hashes < Math.pow(1000, 9)) {
+			result = hashes / Math.pow(1000, 8);
+			unit = 'Y';
+		}
+
+		return $sce.trustAsHtml('<span class="small">' + filter('number')(result.toFixed(2)) + ' <span class="small-hash">' + unit + 'H/s</span></span>');
 	};
 }])
 .filter('totalDifficultyFilter', function() {
@@ -416,6 +420,27 @@ angular.module('netStatsApp.filters', [])
 			result = hashes / Math.pow(1000, 4);
 			unit = 'T';
 		}
+
+		if(hashes >= Math.pow(1000, 5) && hashes < Math.pow(1000, 6)) {
+			result = hashes / Math.pow(1000, 5);
+			unit = 'P';
+		}
+
+		if(hashes >= Math.pow(1000, 6) && hashes < Math.pow(1000, 7)) {
+			result = hashes / Math.pow(1000, 6);
+			unit = 'E';
+		}
+
+		if(hashes >= Math.pow(1000, 7) && hashes < Math.pow(1000, 8)) {
+			result = hashes / Math.pow(1000, 7);
+			unit = 'Z';
+		}
+
+		if(hashes >= Math.pow(1000, 8) && hashes < Math.pow(1000, 9)) {
+			result = hashes / Math.pow(1000, 8);
+			unit = 'Y';
+		}
+
 
 		if( !isMining )
 			return $sce.trustAsHtml(filter('number')(result.toFixed(1)) + ' <span class="small-hash">' + unit + 'H/s</span>');
