@@ -1,6 +1,6 @@
 {
-  "name": "rsk-netstats",
-  "description": "RSK Stats",
+  "name": "RSK Network Stats",
+  "description": "RSK Network Stats",
   "version": "0.0.9",
   "private": true,
   "engines": {
@@ -26,17 +26,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rootstock/rsk-netstats.git"
+    "url": "https://github.com/rootstock/stats.git"
   },
-  "homepage": "https://github.com/rootstock/rsk-netstats",
+  "homepage": "https://github.com/rootstock/stats",
   "bugs": {
-    "url": "https://github.com/rootstock/rsk-netstats/issues"
+    "url": "https://github.com/rootstock/stats/issues"
   },
   "authors": [
     {
       "name": "Marian Oancea",
       "email": "marian@ethdev.com",
       "url": "https://github.com/cubedro"
+    },
+    {
+      "name": "RSK development team",
+      "email": "",
+      "url": "https://github.com/rootstock"
     }
   ],
   "license": "LGPL-3.0",
