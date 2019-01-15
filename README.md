@@ -9,7 +9,7 @@ There is also an angular front end interface in this code that works but is curr
 Note. Information received from network nodes is provided by a service called `stats agent` which is responsible for interacting with an RSK node via web3 to extract relevant information.
 
 
-## Prerequisite
+## Prerequisites
 * node
 * npm
 
