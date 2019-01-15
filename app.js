@@ -408,6 +408,12 @@ var nodeCleanupTimeout = setInterval( function ()
 
 }, 1000*60*60);
 
+const btcHashrateUpdater = setInterval(() =>
+{
+	Nodes.updateBtcHashrate('https://api.blockchain.info/stats');
+
+}, 1000*10);
+
 server.listen(process.env.PORT || 3000);
 
 module.exports = server;
