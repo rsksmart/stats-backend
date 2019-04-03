@@ -408,10 +408,15 @@ var nodeCleanupTimeout = setInterval( function ()
 
 }, 1000*60*60);
 
+const usePrimaryBtcHashrateProvider = require('./lib/utils/config').usePrimaryBtcHashrateProvider;
+
 const btcHashrateUpdater = setInterval(() =>
 {
-	Nodes.updateBtcHashrate('https://api.blockchain.info/stats');
-
+	if(usePrimaryBtcHashrateProvider) {
+		Nodes.updateBtcHashrate('https://api.blockchain.info/stats');
+	} else {
+		Nodes.updateBtcHashrateFromBackUp('https://chain.so/api/v2/get_info/BTC');
+	}
 }, 1000*10);
 
 server.listen(process.env.PORT || 3000);
