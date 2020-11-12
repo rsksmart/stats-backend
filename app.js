@@ -413,7 +413,7 @@ const usePrimaryBtcHashrateProvider = require('./lib/utils/config').usePrimaryBt
 const btcHashrateUpdater = setInterval(() =>
 {
 	if(usePrimaryBtcHashrateProvider) {
-		Nodes.updateBtcHashrate('http://35.202.2.222:5000/blockchain/hashrate/');
+		Nodes.updateBtcHashrate('https://sochain.com/api/v2/get_info/BTC');
 	} else {
 		Nodes.updateBtcHashrateFromBackUp('https://api.blockchain.info/stats');
 	}
