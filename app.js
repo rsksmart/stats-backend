@@ -6,6 +6,11 @@ var http = require('http');
 // Init WS SECRET
 var WS_SECRET;
 
+// Constants
+const LATENCY_TIMEOUT_INTERVAL = 5000; // 5 seconds
+const NODE_CLEANUP_INTERVAL = 1000*60*60 // 60 minutes
+const BTC_HASHRATE_UPDATE_INTERVAL = 1000*60*60; // 60 minutes
+
 if( !_.isUndefined(process.env.WS_SECRET) && !_.isNull(process.env.WS_SECRET) )
 {
 	if( process.env.WS_SECRET.indexOf('|') > 0 )
@@ -393,7 +398,7 @@ var latencyTimeout = setInterval( function ()
 			serverTime: _.now()
 		}
 	});
-}, 5000);
+}, LATENCY_TIMEOUT_INTERVAL);
 
 
 // Cleanup old inactive nodes
@@ -406,7 +411,7 @@ var nodeCleanupTimeout = setInterval( function ()
 
 	Nodes.getCharts();
 
-}, 1000*60*60);
+}, NODE_CLEANUP_INTERVAL);
 
 const usePrimaryBtcHashrateProvider = require('./lib/utils/config').usePrimaryBtcHashrateProvider;
 
@@ -415,9 +420,10 @@ const btcHashrateUpdater = setInterval(() =>
 	if(usePrimaryBtcHashrateProvider) {
 		Nodes.updateBtcHashrate('https://sochain.com/api/v2/get_info/BTC');
 	} else {
-		Nodes.updateBtcHashrateFromBackUp('https://api.blockchain.info/stats');
+		// Nodes.updateBtcHashrateFromBackUp('https://api.blockchain.info/stats');
+		Nodes.updateBtcHashrateFromBraiinsAPI('https://insights.braiins.com/api/v1.0/hashrate-stats');
 	}
-}, 1000*10);
+}, BTC_HASHRATE_UPDATE_INTERVAL);
 
 server.listen(process.env.PORT || 3000);
 
