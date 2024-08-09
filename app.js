@@ -413,16 +413,8 @@ var nodeCleanupTimeout = setInterval( function ()
 
 }, NODE_CLEANUP_INTERVAL);
 
-const usePrimaryBtcHashrateProvider = require('./lib/utils/config').usePrimaryBtcHashrateProvider;
-
-const btcHashrateUpdater = setInterval(() =>
-{
-	if(usePrimaryBtcHashrateProvider) {
-		Nodes.updateBtcHashrate('https://sochain.com/api/v2/get_info/BTC');
-	} else {
-		// Nodes.updateBtcHashrateFromBackUp('https://api.blockchain.info/stats');
-		Nodes.updateBtcHashrateFromBraiinsAPI('https://insights.braiins.com/api/v1.0/hashrate-stats');
-	}
+const btcHashrateUpdater = setInterval(() => {
+	Nodes.updateBtcHashrate();
 }, BTC_HASHRATE_UPDATE_INTERVAL);
 
 server.listen(process.env.PORT || 3000);
