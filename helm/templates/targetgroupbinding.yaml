@@ -1,0 +1,17 @@
+{{- if and .Values.targetGroupBinding .Values.targetGroupBinding.enabled }}
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: {{ include "stats-backend.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "stats-backend.labels" . | nindent 4 }}
+spec:
+  serviceRef:
+    name: {{ include "stats-backend.fullname" . }}
+    port: {{ .Values.service.port }}
+  targetGroupARN: {{ .Values.targetGroupBinding.targetGroupArn }}
+  {{- if .Values.targetGroupBinding.targetType }}
+  targetType: {{ .Values.targetGroupBinding.targetType }}
+  {{- end }}
+{{- end }}

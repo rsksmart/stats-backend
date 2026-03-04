@@ -1,0 +1,22 @@
+apiVersion: v2
+name: stats-backend
+description: RSK Network Stats Backend application
+
+type: application
+version: 0.1.0
+appVersion: "0.0.9"
+
+keywords:
+  - rootstock
+  - rsk
+  - blockchain
+  - stats
+  - backend
+
+home: https://github.com/rsksmart/stats-backend
+sources:
+  - https://github.com/rsksmart/stats-backend
+
+maintainers:
+  - name: RSK Smart
+    url: https://github.com/rsksmart

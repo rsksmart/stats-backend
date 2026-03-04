@@ -1,0 +1,34 @@
+# Development environment values for stats-backend
+
+namespace: stats-backend-dev
+
+image:
+  repository: 654654249872.dkr.ecr.us-east-2.amazonaws.com/stats-backend
+  tag: latest
+
+env:
+  nodeEnv: development
+
+ingress:
+  enabled: false
+  className: alb
+  groupName: ""
+  groupOrder: 100
+  certificateArn: ""
+  hosts:
+    - host: dev-stats-backend.testnet.rootstock.io
+      paths:
+        - path: /
+          pathType: Prefix
+  annotations: {}
+
+# Connect to external ALB via TargetGroupBinding
+targetGroupBinding:
+  enabled: true
+  targetGroupArn: "arn:aws:elasticloadbalancing:us-east-2:654654249872:targetgroup/stats-service-cluster-api/aed5c0f224d895ba"
+  targetType: instance
+
+externalSecrets:
+  enabled: false
+  parameterPaths:
+    wsSecret: /stats-backend/dev/ws-secret

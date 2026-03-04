@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "stats-backend.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "stats-backend.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.targetPort }}
+    protocol: TCP
+    name: http
+  selector:
+    {{- include "stats-backend.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,106 @@
+# Default values for stats-backend.
+# This is a YAML-formatted file.
+
+# -- Number of replicas
+replicaCount: 2
+
+# -- Target namespace for deployment
+namespace: stats-backend
+
+image:
+  # -- Container image repository
+  repository: 654654249872.dkr.ecr.us-east-2.amazonaws.com/stats-backend
+  # -- Image pull policy
+  pullPolicy: Always
+  # -- Image tag (defaults to appVersion if not set)
+  tag: latest
+
+# -- Override the name of the chart
+nameOverride: ""
+# -- Override the full name of the chart
+fullnameOverride: ""
+
+service:
+  # -- Kubernetes service type
+  type: NodePort
+  # -- Service port
+  port: 3000
+  # -- Container port
+  targetPort: 3000
+
+# Application environment configuration
+env:
+  # -- Node environment (development, production)
+  nodeEnv: production
+
+ingress:
+  # -- Enable ingress resource
+  enabled: false
+  # -- Ingress class name (use 'alb' for AWS ALB Ingress Controller)
+  className: alb
+  # -- ALB group name for sharing an ALB with other ingresses
+  # Only works with ALBs created by AWS Load Balancer Controller
+  groupName: ""
+  # -- Order for rule evaluation when sharing an ALB (lower = higher priority)
+  groupOrder: 100
+  # -- ACM certificate ARN for HTTPS
+  certificateArn: ""
+  # -- Additional ingress annotations
+  annotations: {}
+  # -- Ingress hosts configuration
+  hosts:
+    - host: stats-backend.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+# TargetGroupBinding for connecting to an external ALB (created by Terraform/CloudFormation)
+targetGroupBinding:
+  # -- Enable TargetGroupBinding resource
+  enabled: false
+  # -- ARN of the target group to bind to
+  targetGroupArn: ""
+  # -- Target type: 'instance' or 'ip'
+  targetType: instance
+
+resources:
+  requests:
+    # -- CPU request
+    cpu: 100m
+    # -- Memory request
+    memory: 256Mi
+  limits:
+    # -- CPU limit
+    cpu: 500m
+    # -- Memory limit
+    memory: 512Mi
+
+livenessProbe:
+  httpGet:
+    # -- Liveness probe path
+    path: /
+    # -- Liveness probe port
+    port: 3000
+  # -- Initial delay before liveness probe starts
+  initialDelaySeconds: 30
+  # -- Liveness probe interval
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    # -- Readiness probe path
+    path: /
+    # -- Readiness probe port
+    port: 3000
+  # -- Initial delay before readiness probe starts
+  initialDelaySeconds: 10
+  # -- Readiness probe interval
+  periodSeconds: 5
+
+# External Secrets configuration for AWS Parameter Store
+externalSecrets:
+  # -- Enable ExternalSecrets resource
+  enabled: false
+  # -- Parameter Store paths for secrets
+  parameterPaths:
+    wsSecret: /stats-backend/ws-secret
