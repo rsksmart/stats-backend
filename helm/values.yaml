@@ -1,6 +1,9 @@
 # Default values for stats-backend.
 # This is a YAML-formatted file.
 
+# -- Application name used in image repository and parameter store paths
+appName: stats-backend
+
 # -- Number of replicas
 replicaCount: 2
 
@@ -8,8 +11,8 @@ replicaCount: 2
 namespace: stats-backend
 
 image:
-  # -- Container image repository
-  repository: 654654249872.dkr.ecr.us-east-2.amazonaws.com/stats-backend
+  # -- ECR registry URL
+  registry: 654654249872.dkr.ecr.us-east-2.amazonaws.com
   # -- Image pull policy
   pullPolicy: Always
   # -- Image tag (defaults to appVersion if not set)
@@ -32,27 +35,9 @@ service:
 env:
   # -- Node environment (development, production)
   nodeEnv: production
-
-ingress:
-  # -- Enable ingress resource
-  enabled: false
-  # -- Ingress class name (use 'alb' for AWS ALB Ingress Controller)
-  className: alb
-  # -- ALB group name for sharing an ALB with other ingresses
-  # Only works with ALBs created by AWS Load Balancer Controller
-  groupName: ""
-  # -- Order for rule evaluation when sharing an ALB (lower = higher priority)
-  groupOrder: 100
-  # -- ACM certificate ARN for HTTPS
-  certificateArn: ""
-  # -- Additional ingress annotations
-  annotations: {}
-  # -- Ingress hosts configuration
-  hosts:
-    - host: stats-backend.example.com
-      paths:
-        - path: /
-          pathType: Prefix
+  # -- Secret key to use for WS_SECRET environment variable
+  wsSecretKey: backend-password
+  myNewSecret: new-secret # /stats-backend/<env>/new-secret
 
 # TargetGroupBinding for connecting to an external ALB (created by Terraform/CloudFormation)
 targetGroupBinding:
@@ -101,6 +86,11 @@ readinessProbe:
 externalSecrets:
   # -- Enable ExternalSecrets resource
   enabled: false
-  # -- Parameter Store paths for secrets
-  parameterPaths:
-    wsSecret: /stats-backend/ws-secret
+  # -- Environment suffix for parameter paths (e.g., dev, prod)
+  envSuffix: ""
+  # -- AWS region for Parameter Store
+  region: us-east-2
+  # -- List of secrets to fetch from Parameter Store
+  secrets:
+    - secretKey: backend-password
+      remoteKey: backend-password

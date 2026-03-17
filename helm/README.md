@@ -6,37 +6,41 @@ A Helm chart for deploying the RSK Network Stats Backend application on Kubernet
 
 - Kubernetes 1.19+
 - Helm 3.0+
-- AWS Load Balancer Controller (if using ALB ingress or TargetGroupBinding)
-- External Secrets Operator (if using ExternalSecrets)
+- AWS Load Balancer Controller (for TargetGroupBinding)
+- External Secrets Operator (for ExternalSecrets)
 
 ## Installation
+
+The chart automatically creates the namespace defined in `values.namespace`, so no manual namespace creation is required.
 
 ### Basic Installation
 
 ```bash
-# Create namespace first
-kubectl create namespace stats-backend
-
-# Install with default values
-helm install stats-backend ./helm -n stats-backend
+# Install with default values (creates stats-backend namespace)
+helm install stats-backend . -f values.yaml
 ```
 
 ### Environment-Specific Installation
 
 ```bash
-# Development
-kubectl create namespace stats-backend-dev
-helm install stats-backend ./helm -n stats-backend-dev -f helm/values-dev.yaml
+# Development (creates stats-backend-dev namespace)
+helm install stats-backend . -f values.yaml -f values-dev.yaml
 
-# Production
-kubectl create namespace stats-backend-prod
-helm install stats-backend ./helm -n stats-backend-prod -f helm/values-prod.yaml
+# Production (creates stats-backend-prod namespace)
+helm install stats-backend . -f values.yaml -f values-prod.yaml
+
+# Testnet (creates stats-backend-testnet namespace)
+helm install stats-backend . -f values.yaml -f values-testnet.yaml
 ```
 
 ### Upgrade
 
 ```bash
-helm upgrade stats-backend ./helm -n stats-backend -f helm/values.yaml
+# Upgrade dev environment
+helm upgrade stats-backend . -f values.yaml -f values-dev.yaml
+
+# Upgrade prod environment
+helm upgrade stats-backend . -f values.yaml -f values-prod.yaml
 ```
 
 ### Uninstall
@@ -51,6 +55,7 @@ helm uninstall stats-backend -n stats-backend
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `appName` | Application name used in image path and parameter store | `stats-backend` |
 | `replicaCount` | Number of pod replicas | `2` |
 | `namespace` | Target namespace for deployment | `stats-backend` |
 | `nameOverride` | Override chart name | `""` |
@@ -60,7 +65,7 @@ helm uninstall stats-backend -n stats-backend
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `image.repository` | Container image repository | `654654249872.dkr.ecr.us-east-2.amazonaws.com/stats-backend` |
+| `image.registry` | Container image registry | `654654249872.dkr.ecr.us-east-2.amazonaws.com` |
 | `image.pullPolicy` | Image pull policy | `Always` |
 | `image.tag` | Image tag | `latest` |
 
@@ -69,6 +74,7 @@ helm uninstall stats-backend -n stats-backend
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `env.nodeEnv` | Node environment (development, production) | `production` |
+| `env.wsSecretKey` | Secret key name for WS_SECRET env var | `backend-password` |
 
 ### Service Parameters
 
@@ -77,18 +83,6 @@ helm uninstall stats-backend -n stats-backend
 | `service.type` | Kubernetes service type | `NodePort` |
 | `service.port` | Service port | `3000` |
 | `service.targetPort` | Container port | `3000` |
-
-### Ingress Parameters
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `ingress.enabled` | Enable ingress resource | `false` |
-| `ingress.className` | Ingress class name | `alb` |
-| `ingress.groupName` | ALB group name for sharing | `""` |
-| `ingress.groupOrder` | Rule evaluation order | `100` |
-| `ingress.certificateArn` | ACM certificate ARN for HTTPS | `""` |
-| `ingress.annotations` | Additional annotations | `{}` |
-| `ingress.hosts` | Ingress hosts configuration | See values.yaml |
 
 ### TargetGroupBinding Parameters
 
@@ -112,45 +106,14 @@ helm uninstall stats-backend -n stats-backend
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `externalSecrets.enabled` | Enable ExternalSecrets | `false` |
-| `externalSecrets.parameterPaths.wsSecret` | Parameter Store path for WS secret | `/stats-backend/ws-secret` |
+| `externalSecrets.envSuffix` | Environment suffix for parameter paths (dev, prod) | `""` |
+| `externalSecrets.secrets` | List of secrets to fetch | See values.yaml |
 
-## Load Balancer Options
+## TargetGroupBinding
 
-This chart supports two methods for exposing the application via AWS ALB:
-
-### Option 1: Kubernetes-Managed ALB (Ingress)
-
-Use this when you want the AWS Load Balancer Controller to create and manage the ALB.
+This chart uses TargetGroupBinding to register the service with an externally-managed AWS ALB (created by Terraform/CloudFormation).
 
 ```yaml
-ingress:
-  enabled: true
-  className: alb
-  certificateArn: "arn:aws:acm:region:account:certificate/xxx"
-  hosts:
-    - host: stats-backend.example.com
-      paths:
-        - path: /
-          pathType: Prefix
-```
-
-**Sharing an ALB with other services:**
-
-```yaml
-ingress:
-  enabled: true
-  groupName: "shared-alb"
-  groupOrder: 100
-```
-
-### Option 2: External ALB (TargetGroupBinding)
-
-Use this when the ALB is created externally (e.g., by Terraform) and you just need to register the service with an existing target group.
-
-```yaml
-ingress:
-  enabled: false
-
 targetGroupBinding:
   enabled: true
   targetGroupArn: "arn:aws:elasticloadbalancing:region:account:targetgroup/name/xxx"
@@ -164,18 +127,24 @@ This chart integrates with the External Secrets Operator to sync secrets from AW
 ### Prerequisites
 
 1. External Secrets Operator installed in the cluster
-2. A `ClusterSecretStore` named `aws-parameter-store` configured
+2. Service account with IAM permissions to access Parameter Store
 
-### Enabling External Secrets
+### Configuration
 
 ```yaml
 externalSecrets:
   enabled: true
-  parameterPaths:
-    wsSecret: /stats-backend/prod/ws-secret
+  envSuffix: dev  # Results in path: /stats-backend/dev/backend-password
+  secrets:
+    - secretKey: backend-password
+      remoteKey: backend-password
 ```
 
-The secret will be mounted as the `WS_SECRET` environment variable in the container.
+The chart creates a `ClusterSecretStore` resource that configures AWS Parameter Store access. Secrets are synced to a Kubernetes Secret and mounted as environment variables.
+
+Parameter Store path format: `/<appName>/<envSuffix>/<remoteKey>`
+
+Example: `/stats-backend/dev/backend-password`
 
 ## Health Checks
 
@@ -193,38 +162,43 @@ The chart configures both liveness and readiness probes:
 
 ## Troubleshooting
 
+Replace `<namespace>` with your target namespace (e.g., `stats-backend-dev`, `stats-backend-prod`).
+
 ### Check Pod Status
 
 ```bash
-kubectl get pods -n stats-backend -l app.kubernetes.io/name=stats-backend
-kubectl describe pod -n stats-backend <pod-name>
-kubectl logs -n stats-backend <pod-name>
+kubectl get pods -n <namespace> -l app.kubernetes.io/name=stats-backend
+kubectl describe pod -n <namespace> <pod-name>
+kubectl logs -n <namespace> <pod-name>
 ```
 
 ### Check Service and Endpoints
 
 ```bash
-kubectl get svc -n stats-backend
-kubectl get endpoints -n stats-backend
+kubectl get svc -n <namespace>
+kubectl get endpoints -n <namespace>
 ```
 
-### Check Ingress or TargetGroupBinding
+### Check TargetGroupBinding
 
 ```bash
-# For Ingress
-kubectl get ingress -n stats-backend
-kubectl describe ingress -n stats-backend stats-backend
+kubectl get targetgroupbindings -n <namespace>
+kubectl describe targetgroupbinding -n <namespace> stats-backend
+```
 
-# For TargetGroupBinding
-kubectl get targetgroupbindings -n stats-backend
-kubectl describe targetgroupbinding -n stats-backend stats-backend
+### Check External Secrets
+
+```bash
+kubectl get externalsecrets -n <namespace>
+kubectl describe externalsecret -n <namespace> stats-backend-secrets
+kubectl get secret -n <namespace> stats-backend-secrets
 ```
 
 ### Validate Chart
 
 ```bash
-helm lint ./helm
-helm template stats-backend ./helm -f helm/values.yaml
+helm lint .
+helm template stats-backend . -f values.yaml
 ```
 
 ## Development
@@ -233,14 +207,14 @@ helm template stats-backend ./helm -f helm/values.yaml
 
 ```bash
 # Dry run to see what would be deployed
-helm install stats-backend ./helm --dry-run --debug
+helm install stats-backend . -f values.yaml -f values-dev.yaml --dry-run --debug
 
 # Template rendering
-helm template stats-backend ./helm -f helm/values-dev.yaml
+helm template stats-backend . -f values.yaml -f values-dev.yaml
 ```
 
 ### Linting
 
 ```bash
-helm lint ./helm
+helm lint .
 ```

@@ -1,22 +1,22 @@
 # Development environment values for stats-backend
 
-namespace: stats-backend-dev
+namespace: stats-backend-testnet
 
 image:
-  tag: dev
+  tag: testnet
 
 env:
-  nodeEnv: development
+  nodeEnv: production
 
 # Connect to external ALB via TargetGroupBinding
 targetGroupBinding:
   enabled: true
-  targetGroupArn: "arn:aws:elasticloadbalancing:us-east-2:654654249872:targetgroup/stats-service-cluster-api/19f56ca831b62408"
+  targetGroupArn: "arn:aws:elasticloadbalancing:us-east-2:654654249872:targetgroup/stats-service-cluster-api/aed5c0f224d895ba"
   targetType: instance
 
 externalSecrets:
   enabled: true
-  envSuffix: dev
+  envSuffix: prod
   secrets:
     - secretKey: backend-password
       remoteKey: backend-password

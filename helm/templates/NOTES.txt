@@ -4,18 +4,10 @@ Your release is named: {{ .Release.Name }}
 Namespace: {{ .Values.namespace }}
 
 To verify the deployment:
-  kubectl get pods -n {{ .Values.namespace }} -l "app.kubernetes.io/name={{ include "stats-backend.name" . }},app.kubernetes.io/instance={{ .Release.Name }}"
+  kubectl get pods -n {{ .Values.namespace }} -l "app.kubernetes.io/name={{ include "app.name" . }},app.kubernetes.io/instance={{ .Release.Name }}"
 
 To check the service:
-  kubectl get svc -n {{ .Values.namespace }} {{ include "stats-backend.fullname" . }}
-
-{{- if .Values.ingress.enabled }}
-
-Ingress is enabled. Access the application at:
-{{- range .Values.ingress.hosts }}
-  http{{ if $.Values.ingress.certificateArn }}s{{ end }}://{{ .host }}
-{{- end }}
-{{- end }}
+  kubectl get svc -n {{ .Values.namespace }} {{ include "app.fullname" . }}
 
 {{- if .Values.targetGroupBinding.enabled }}
 

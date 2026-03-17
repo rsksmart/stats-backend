@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "stats-backend.fullname" . }}
+  name: {{ include "app.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "stats-backend.labels" . | nindent 4 }}
+    {{- include "app.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "stats-backend.selectorLabels" . | nindent 6 }}
+      {{- include "app.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "stats-backend.selectorLabels" . | nindent 8 }}
+        {{- include "app.selectorLabels" . | nindent 8 }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.image.registry }}/{{ .Values.appName }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: http
@@ -32,8 +32,8 @@ spec:
         - name: WS_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "stats-backend.fullname" . }}-secrets
-              key: ws-secret
+              name: {{ include "app.fullname" . }}-secrets
+              key: {{ .Values.env.wsSecretKey }}
         {{- end }}
         livenessProbe:
           {{- toYaml .Values.livenessProbe | nindent 10 }}

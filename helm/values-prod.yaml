@@ -5,24 +5,16 @@ replicaCount: 3
 namespace: stats-backend-prod
 
 image:
-  repository: 654654249872.dkr.ecr.us-east-2.amazonaws.com/stats-backend
   tag: latest
 
 env:
   nodeEnv: production
 
-ingress:
+# Connect to external ALB via TargetGroupBinding
+targetGroupBinding:
   enabled: true
-  className: alb
-  groupName: ""
-  groupOrder: 100
-  certificateArn: ""  # Add production ACM certificate ARN
-  hosts:
-    - host: stats-backend.testnet.rootstock.io
-      paths:
-        - path: /
-          pathType: Prefix
-  annotations: {}
+  targetGroupArn: ""  # Add production target group ARN
+  targetType: instance
 
 resources:
   requests:
@@ -34,5 +26,4 @@ resources:
 
 externalSecrets:
   enabled: true
-  parameterPaths:
-    wsSecret: /stats-backend/prod/ws-secret
+  envSuffix: prod
