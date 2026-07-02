@@ -58,6 +58,7 @@ helm uninstall stats-backend -n stats-backend
 | `appName` | Application name used in image path and parameter store | `stats-backend` |
 | `replicaCount` | Number of pod replicas | `2` |
 | `namespace` | Target namespace for deployment | `stats-backend` |
+| `envSuffix` | Environment suffix for namespace labels and parameter paths (e.g., dev, prod) | `""` |
 | `nameOverride` | Override chart name | `""` |
 | `fullnameOverride` | Override full chart name | `""` |
 
@@ -106,7 +107,6 @@ helm uninstall stats-backend -n stats-backend
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `externalSecrets.enabled` | Enable ExternalSecrets | `false` |
-| `externalSecrets.envSuffix` | Environment suffix for parameter paths (dev, prod) | `""` |
 | `externalSecrets.secrets` | List of secrets to fetch | See values.yaml |
 
 ## TargetGroupBinding
@@ -132,19 +132,20 @@ This chart integrates with the External Secrets Operator to sync secrets from AW
 ### Configuration
 
 ```yaml
+envSuffix: dev  # Top-level value used in parameter path
+
 externalSecrets:
   enabled: true
-  envSuffix: dev  # Results in path: /stats-backend/dev/backend-password
   secrets:
     - secretKey: backend-password
       remoteKey: backend-password
 ```
 
-The chart creates a `ClusterSecretStore` resource that configures AWS Parameter Store access. Secrets are synced to a Kubernetes Secret and mounted as environment variables.
+The chart creates a `SecretStore` resource that configures AWS Parameter Store access. Secrets are synced to a Kubernetes Secret and mounted as environment variables.
 
-Parameter Store path format: `/<appName>/<envSuffix>/<remoteKey>`
+Parameter Store path format: `/<clusterName>/<namespace>/<remoteKey>`
 
-Example: `/stats-backend/dev/backend-password`
+Example: `/stats-service-cluster/stats-backend-dev/backend-password`
 
 ## Health Checks
 

@@ -4,8 +4,14 @@
 # -- Application name used in image repository and parameter store paths
 appName: stats-backend
 
+# -- Kubernetes cluster name (used as prefix in Parameter Store paths)
+clusterName: ""
+
+# -- Environment suffix for namespace labels and parameter paths (e.g., dev, prod)
+envSuffix: ""
+
 # -- Number of replicas
-replicaCount: 2
+replicaCount: 1
 
 # -- Target namespace for deployment
 namespace: stats-backend
@@ -86,10 +92,10 @@ readinessProbe:
 externalSecrets:
   # -- Enable ExternalSecrets resource
   enabled: false
-  # -- Environment suffix for parameter paths (e.g., dev, prod)
-  envSuffix: ""
   # -- AWS region for Parameter Store
   region: us-east-2
+  # -- IAM Role ARN for IRSA (use tofu output external_secrets_operator_iam_role_arn)
+  irsaRoleArn: ""
   # -- List of secrets to fetch from Parameter Store
   secrets:
     - secretKey: backend-password
