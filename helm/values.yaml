@@ -1,0 +1,102 @@
+# Default values for stats-backend.
+# This is a YAML-formatted file.
+
+# -- Application name used in image repository and parameter store paths
+appName: stats-backend
+
+# -- Kubernetes cluster name (used as prefix in Parameter Store paths)
+clusterName: ""
+
+# -- Environment suffix for namespace labels and parameter paths (e.g., dev, prod)
+envSuffix: ""
+
+# -- Number of replicas
+replicaCount: 1
+
+# -- Target namespace for deployment
+namespace: stats-backend
+
+image:
+  # -- ECR registry URL
+  registry: 654654249872.dkr.ecr.us-east-2.amazonaws.com
+  # -- Image pull policy
+  pullPolicy: Always
+  # -- Image tag (defaults to appVersion if not set)
+  tag: latest
+
+# -- Override the name of the chart
+nameOverride: ""
+# -- Override the full name of the chart
+fullnameOverride: ""
+
+service:
+  # -- Kubernetes service type
+  type: NodePort
+  # -- Service port
+  port: 3000
+  # -- Container port
+  targetPort: 3000
+
+# Application environment configuration
+env:
+  # -- Node environment (development, production)
+  nodeEnv: production
+  # -- Secret key to use for WS_SECRET environment variable
+  wsSecretKey: backend-password
+  myNewSecret: new-secret # /stats-backend/<env>/new-secret
+
+# TargetGroupBinding for connecting to an external ALB (created by Terraform/CloudFormation)
+targetGroupBinding:
+  # -- Enable TargetGroupBinding resource
+  enabled: false
+  # -- ARN of the target group to bind to
+  targetGroupArn: ""
+  # -- Target type: 'instance' or 'ip'
+  targetType: instance
+
+resources:
+  requests:
+    # -- CPU request
+    cpu: 100m
+    # -- Memory request
+    memory: 256Mi
+  limits:
+    # -- CPU limit
+    cpu: 500m
+    # -- Memory limit
+    memory: 512Mi
+
+livenessProbe:
+  httpGet:
+    # -- Liveness probe path
+    path: /
+    # -- Liveness probe port
+    port: 3000
+  # -- Initial delay before liveness probe starts
+  initialDelaySeconds: 30
+  # -- Liveness probe interval
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    # -- Readiness probe path
+    path: /
+    # -- Readiness probe port
+    port: 3000
+  # -- Initial delay before readiness probe starts
+  initialDelaySeconds: 10
+  # -- Readiness probe interval
+  periodSeconds: 5
+
+# External Secrets configuration for AWS Parameter Store
+externalSecrets:
+  # -- Enable ExternalSecrets resource
+  enabled: false
+  # -- AWS region for Parameter Store
+  region: us-east-2
+  # -- IAM Role ARN for IRSA (use tofu output external_secrets_operator_iam_role_arn)
+  irsaRoleArn: ""
+  # -- List of secrets to fetch from Parameter Store
+  secrets:
+    - secretKey: backend-password
+      remoteKey: backend-password

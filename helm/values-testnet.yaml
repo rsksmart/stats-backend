@@ -1,0 +1,26 @@
+# Testnet environment values for stats-backend
+
+clusterName: stats-service-cluster
+namespace: stats-backend-production
+envSuffix: testnet
+
+image:
+  tag: testnet
+
+env:
+  nodeEnv: testnet
+
+# Connect to external ALB via TargetGroupBinding
+targetGroupBinding:
+  enabled: true
+  targetGroupArn: "arn:aws:elasticloadbalancing:us-east-2:654654249872:targetgroup/stats-service-cluster-testnet/c38a31f7022e567d"
+  targetType: instance
+
+externalSecrets:
+  enabled: true
+  refreshInterval: 1h
+  secretStoreName: "stats-backend-production-secret-store"
+  # targetSecretName defaults to stats-backend-testnet-secrets (matches deployment)
+  secrets:
+    - secretKey: backend-password
+      remoteKey: /stats-service-cluster/stats-backend-production/database-password-testnet

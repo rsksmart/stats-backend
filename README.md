@@ -1,47 +1,55 @@
-RSK Network Stats | Backend
-===========================
+Rootstock Network Stats | Backend
+================================
 
-This component exposes a websockets interface to receive and aggregate information from RSK network nodes. 
-Information is then provided through a websockets service and used by the RSK Network Stats frontend component. This component outputs all the data through vue interace.
+This component exposes a WebSocket interface that receives and aggregates information from Rootstock (RSK) network nodes. The aggregated data is then published over WebSockets and consumed by the Rootstock Network Stats frontend, which lives in its own repository.
 
-There is also an angular front end interface in this code that works but is currently not being used to output information.
+Information received from network nodes is provided by a service called `stats agent`, which is responsible for interacting with an RSK node via web3 to extract the relevant information.
 
-Note. Information received from network nodes is provided by a service called `stats agent` which is responsible for interacting with an RSK node via web3 to extract relevant information.
+See [Metrics.md](Metrics.md) for details on how block history and the derived metrics are computed.
 
+## WebSocket endpoints
+
+| Path | Consumer | Purpose |
+|------|----------|---------|
+| `/api` | `stats agent` | Nodes authenticate with `WS_SECRET` and push blocks, stats, pending txs, latency and history |
+| `/primus` | Stats frontend | Receives aggregated node list, blocks, stats and charts |
+| `/external` | External consumers | Read-only feed of collection events |
 
 ## Prerequisites
-* node
+
+* Node.js 18
 * npm
 
 ## Installation
-Make sure you have node.js and npm installed.
-
-Clone the repository and install the dependencies
 
 ```bash
-git clone https://github.com/rsksmart/stats.git
-cd stats
+git clone https://github.com/rsksmart/stats-backend.git
+cd stats-backend
 npm install
-sudo npm install -g grunt-cli
 ```
 
-## Build the resources
-There are two versions: the full version and the lite version. In order to build the static files you have to run grunt tasks which will generate dist or dist-lite directories containing the js and css files, fonts and images.
+## Configuration
 
+The service is configured entirely through environment variables:
 
-To build the full version run
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `3000` | Port the HTTP/WebSocket server listens on |
+| `WS_SECRET` | — | Secret(s) the `stats agent` must present on the `/api` endpoint. Multiple secrets can be separated with `\|` |
+| `NODE_ENV` | — | When set to `production`, the bundled legacy web UI is not served and only the WebSocket endpoints are exposed |
+| `LITE` | `false` | Serve the lite build (`src-lite`/`dist-lite`) instead of the full one |
+| `VERBOSITY` | `2` | Log verbosity (0 = silent, 3 = most verbose) |
+
+If `WS_SECRET` is not set, the server falls back to reading `ws_secret.json` from the repository root. That file is gitignored and is only intended for local development.
+
+## Build the bundled web UI
+
+The repository still contains a legacy web interface (Jade + AngularJS) that the server renders when `NODE_ENV` is not `production`. It is not the frontend used in production, but it is useful for local inspection. Building it produces the `dist` (full) or `dist-lite` (lite) directories with the js, css, fonts and images.
+
 ```bash
-grunt
-```
-
-To build the lite version run
-```bash
-grunt lite
-```
-
-If you want to build both versions run
-```bash
-grunt all
+npx grunt        # full version -> dist/
+npx grunt lite   # lite version  -> dist-lite/
+npx grunt all    # both
 ```
 
 ## Run
@@ -50,11 +58,25 @@ grunt all
 npm start
 ```
 
-See the interface at http://localhost:3000
+The server listens on http://localhost:3000. With `NODE_ENV` unset, the bundled UI is available at that address; in production only the WebSocket endpoints are served.
 
+## Docker
 
-To update geoip-lite db run
+```bash
+docker build -t stats-backend .
+docker run -p 3000:3000 -e WS_SECRET=your-secret stats-backend
+```
 
-``` bash
+The image builds the full web UI at image build time and starts the server with `npm start`.
+
+## Kubernetes / Helm
+
+A Helm chart for deploying this service is included under [`helm/`](helm/), with per-network value files (`values-mainnet.yaml`, `values-testnet.yaml`). It supports External Secrets (AWS Parameter Store) for `WS_SECRET` and TargetGroupBinding for attaching to an externally managed AWS ALB. See [helm/README.md](helm/README.md) for the full parameter reference.
+
+## Maintenance
+
+To update the geoip-lite database:
+
+```bash
 npm explore geoip-lite -- npm run updatedb
 ```
